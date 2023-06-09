@@ -7,19 +7,21 @@ use Webwarrd\Core\Router;
 
 class Application{
     public static $rootDir;
-    public $request;
-    public $response;
+    public static $request;
+    public static $response;
     public $router;
 
     public function __construct($rootDir)
     {
         self::$rootDir = $rootDir;
-        $this->request = new Request();
+        self::$request = new Request();
+        self::$response = new Response();
         $this->router = new Router();
     }
 
     public function run()
     {
-        $this->router->process($this->request);
+        $this->router->process(self::$request);
+        self::$response->send();
     }
 }

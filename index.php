@@ -6,4 +6,6 @@ use Webwarrd\Core\Application;
 
 $app = new Application(__DIR__);
 
+$app->router->loadRoutes($routes);
+
 $app->run();

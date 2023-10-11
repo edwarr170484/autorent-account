@@ -1,0 +1,16 @@
+{
+    "name": "webwarrd/acoount",
+    "description": "Users private zone functionality",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Webwarrd\\Core\\": "system/",
+            "App\\Account\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "ramsey/uuid": "^4.2",
+        "guzzlehttp/guzzle": "7."
+    }
+}

@@ -20,8 +20,14 @@ class MainController extends Controller
                 $startDateParts = explode(" ", $item["Дата"]);
                 $today = new \DateTime("now");
 
-                $prolongationDate = $today->format("d.m.Y") . " " . $startDateParts[1];
-                $summ = $gate->getProlongationSumm($item["УИД"], $item["Номер"], $item["Дата"], $prolongationDate);
+                $params = [
+                    "date" => $item["Дата"],
+                    "number" => $item["Номер"],
+                    "date_of_calc" => $today->format("d.m.Y") . " " . $startDateParts[1],
+                    "UID" => $item["УИД"]
+                ];
+
+                $summ = $gate->getProlongationSumm($params);
 
                 $items[] = [
                     "УИД" => $item["УИД"],

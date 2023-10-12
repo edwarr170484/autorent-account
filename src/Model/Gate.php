@@ -23,20 +23,20 @@ class Gate extends Model
     {
         $result = $this->auth("Site_Exchange", "dS-89eoeX_")->get("https://1c.corp-pobeda63.com:4433/uf_static_test/hs/API/PartnerAgreementHistory?UID=" . $contractUID);
 
-        return ($result->isErrors()) ? ["ЕстьОшибка" => true, "ТекстОшибки" => implode(";", $result->getErrors())] : $result->getJsonResult();
+        return ($result->isErrors()) ? ["ЕстьОшибка" => true, "ТекстОшибки" => implode(";", $result->getErrors()["messages"])] : $result->getJsonResult();
     }
 
-    public function getProlongationSumm($contractUID, $number, $date, $dateOfCalc)
+    public function getProlongationSumm($params)
     {
-        $result = $this->auth("WEBService", "dS-89eoeX_")->get("https://1c.corp-pobeda63.com:5446/uf_product_test_services/hs/Prolongation/GetProlongationSum?date=" . $date . "&number=" . $number ."&date_of_calc=" . $dateOfCalc . "&UID=" . $contractUID);
+        $result = $this->auth("WEBService", "dS-89eoeX_")->get("https://1c.corp-pobeda63.com:5446/uf_product_test_services/hs/Prolongation/GetProlongationSum?date=" . $params["date"] . "&number=" . $params["number"] ."&date_of_calc=" . $params["date_of_calc"] . "&UID=" . $params["UID"]);
 
-        return ($result->isErrors()) ? ["ЕстьОшибка" => true, "ТекстОшибки" => implode(";", $result->getErrors())] : $result->getJsonResult();
+        return ($result->isErrors()) ? ["ЕстьОшибка" => true, "ТекстОшибки" => implode(";", $result->getErrors()["messages"])] : $result->getJsonResult();
     }
 
-    public function prolongateContract($contractUID, $number, $date, $dateOfCalc, $amount)
+    public function prolongateContract($params)
     {
-        $result = $this->auth("WEBService", "dS-89eoeX_")->post("https://1c.corp-pobeda63.com:5446/uf_product_test_services/hs/Prolongation/AgreementProlongation?UID=" . $contractUID . "&date=" . $date . "&date_of_calc=" . $dateOfCalc . "&number=" . $number ."&check_number_KKM=4444&ogrn_number=999&prolongation_sum=" . $amount);
+        $result = $this->auth("WEBService", "dS-89eoeX_")->post("https://1c.corp-pobeda63.com:5446/uf_product_test_services/hs/Prolongation/AgreementProlongation?UID=" .$params["UID"] ."&date=" . $params["date"] . "&date_of_calc=" . $params["date_of_calc"] . "&number=" . $params["number"] . "&check_number_KKM=" . $params["check_number_KKM"] . "&ogrn_number=" . $params["ogrn_number"] . "&prolongation_sum=" . $params["prolongation_sum"], $params);
 
-        return ($result->isErrors()) ? ["ЕстьОшибка" => true, "ТекстОшибки" => implode(";", $result->getErrors())] : $result->getJsonResult();
+        return ($result->isErrors()) ? ["ЕстьОшибка" => true, "ТекстОшибки" => implode(";", $result->getErrors()["messages"])] : $result->getJsonResult();
     }
 }

@@ -54,6 +54,16 @@ class Wirebank extends Model implements Payment
     {
         return $order["payment_url"];
     }
+    
+    public function getPaymentInformation($paymentId)
+    {
+        return [];
+    }
+
+    public function isPaymentSuccess()
+    {
+        return true;
+    }
 
     public function getName()
     {

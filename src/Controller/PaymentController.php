@@ -12,6 +12,7 @@ class PaymentController extends Controller
     public function create()
     {
         $contract = $this->request->post("contract");
+        $this->session->payment = $contract["payment"];
 
         if($contract)
         {
@@ -24,15 +25,46 @@ class PaymentController extends Controller
 
     public function success()
     {
-        $gate = new Gate();
+        //получаем информацию о платеже
+        $paymentMethod = "App\\Account\\Model\\" . $this->session->payment;
+        $payment = new $paymentMethod();
+        $payemntInformation = $payment->getPaymentInformation();
 
-        $gate->prolongateContract();
+        if($payment->isPaymentSuccess())
+        {
+            //получаем информацио о договоре
+            $gate = new Gate();
+            $data = $gate->getContractHistory($payment->reference);
 
-        return $this->renderRaw("Success");
+            if($data)
+            {
+                $startDateParts = explode(" ", $data["Дата"]);
+                $today = new \DateTime("now");
+                $dateOfCalc = $today->format("d.m.Y") . " " . $startDateParts[1];
+
+                $params = [
+                    "UID" => $data["УИД"],
+                    "date" => $data["Дата"],
+                    "date_of_calc" => $dateOfCalc,
+                    "number" => $data["Номер"],
+                    "check_number_KKM" => 4444,
+                    "ogrn_number" => 999,
+                    "prolongation_sum" => (float)$payment->amount / 100
+                ];
+
+                $result = $gate->prolongateContract($params);
+            }
+
+            return $this->render("statuses/success.php", ["title" => "Платеж успешно принят!", "text" => "Ваш платеж успешна завершен. Договор номер " . $data["Номер"] . " продлен."]);
+        }
+        else
+        {
+            return $this->render("statuses/success.php", ["title" => "Платеж пока не принят!", "text" => "Платеж зарегистриован платежной системой, однако пока не завершился успешно. Мы следим за ситуацией и известим Вас, когда платеж будет завершен."]);
+        }
     }
 
     public function error()
     {
-        return $this->renderRaw("Error");
+        return $this->render("statuses/error.php", []);
     }
 }

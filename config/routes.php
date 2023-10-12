@@ -49,7 +49,7 @@ $routes = [
         "handler" => "success",
         "firewall" => true
     ],
-    "payment_success" => [
+    "payment_error" => [
         "uri" => "/payment/error",
         "controller" => "Payment",
         "handler" => "error",

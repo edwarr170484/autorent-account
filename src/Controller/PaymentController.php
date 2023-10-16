@@ -28,7 +28,7 @@ class PaymentController extends Controller
         //получаем информацию о платеже
         $paymentMethod = "App\\Account\\Model\\" . $this->session->payment;
         $payment = new $paymentMethod();
-        $payemntInformation = $payment->getPaymentInformation();
+        $info = $payment->getPaymentInformation();
 
         if($payment->isPaymentSuccess())
         {

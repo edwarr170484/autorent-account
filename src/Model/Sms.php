@@ -38,7 +38,7 @@ class Sms extends Model
             else
             {
                 $this->result["error"] = 1;
-                $this->result["message"] = "Отправка СМС сообщения не удалась. Повторите попытку позже";
+                $this->result["message"] = "Отправка СМС сообщения не удалась. " . $result["status_text"] ;
             }
         }
         else

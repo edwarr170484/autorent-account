@@ -118,9 +118,12 @@ class Wirebank extends Model implements Payment
             {
                 $arr = json_decode($message, true);
 
-                if(count($arr) > 0)
+                if(is_array($arr))
                 {
-                    array_push($messages, $arr["message"]);
+                    if(count($arr) > 0)
+                    {
+                        array_push($messages, $arr["message"]);
+                    }
                 }
                 else
                 {

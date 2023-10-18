@@ -5,14 +5,15 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Exception\TransferException;
 use Webwarrd\Core\Application;
+use Webwarrd\Core\Error;
 
 class Model
 {
     public $config;
+    public $session;
     private $client;
     private $params;
     private $result;
-    private $errors;
     protected $request;
     
     
@@ -20,6 +21,7 @@ class Model
     {
         $this->request = Application::$request;
         $this->config = Application::$config;
+        $this->session = Application::$session;
         $this->client = new Client();
         
         $this->params = [
@@ -27,7 +29,6 @@ class Model
         ];
 
         $this->result = [];
-        $this->errors = [];
     }
 
     protected function auth($login, $password)
@@ -45,7 +46,7 @@ class Model
         }
         catch(TransferException $e)
         {
-            $this->addError($e->getResponse()->getBody(true));
+            $this->handleError($e);
         }
 
         return $this;
@@ -61,7 +62,7 @@ class Model
         }
         catch(TransferException $e)
         {
-            $this->addError($e->getResponse()->getBody(true));
+            $this->handleError($e);
         }
 
         return $this;
@@ -77,7 +78,7 @@ class Model
         }
         catch(TransferException $e)
         {
-            $this->addError($e->getResponse()->getBody(true));
+            $this->handleError($e);
         }
 
         return $this;
@@ -93,22 +94,19 @@ class Model
         return json_decode($this->result->getBody(), true);
     }
 
-    protected function isErrors()
-    {
-        return count($this->errors) > 0 ? true : false;
-    }
-
-    protected function addError($message)
-    {
-        array_push($this->errors, $message);
-    }
-
-    protected function getErrors()
-    {
-        return ["error" => 1, "messages" => $this->errors];
-    }
-
     protected function getStatusCode(){
         return $this->result->getStatusCode();
+    }
+
+    private function handleError($exception)
+    {
+        if ($exception->hasResponse()) 
+        {
+            Error::add($exception->getResponse()->getBody());
+        } 
+        else 
+        {
+            Error::add($exception->getMessage());
+        }
     }
 }

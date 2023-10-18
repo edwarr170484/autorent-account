@@ -14,7 +14,6 @@ class Application{
     public static $config;
     public $router;
 
-
     public function __construct($rootDir, $config)
     {
         self::$rootDir = $rootDir;

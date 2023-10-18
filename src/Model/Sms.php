@@ -2,6 +2,7 @@
 namespace App\Account\Model;
 
 use Webwarrd\Core\Model;
+use Webwarrd\Core\Error;
 
 class Sms extends Model
 {
@@ -25,7 +26,7 @@ class Sms extends Model
 
         $client = $this->post($this->config["sms_domain"] . "/sms/send", $params);
 
-        if(!$client->isErrors())
+        if(!Error::is())
         {
             $result = $client->getJsonResult();
 

@@ -30,11 +30,11 @@ class PaymentController extends Controller
         $payment = new $paymentMethod();
         $info = $payment->getPaymentInformation();
 
-        if($payment->isPaymentSuccess())
+        if($this->session->paymentId && $info && $payment->isPaymentSuccess())
         {
             //получаем информацио о договоре
             $gate = new Gate();
-            $data = $gate->getContractHistory($payment->reference);
+            $data = $gate->getContractHistory($payment->getPaymentProduct());
 
             if($data)
             {
@@ -49,13 +49,23 @@ class PaymentController extends Controller
                     "number" => $data["Номер"],
                     "check_number_KKM" => 4444,
                     "ogrn_number" => 999,
-                    "prolongation_sum" => (float)$payment->amount / 100
+                    "prolongation_sum" => $payment->getPaymentAmount()
                 ];
 
                 $result = $gate->prolongateContract($params);
+                $this->session->remove("paymentId");
+
+                if($result["ЕстьОшибка"])
+                {
+                    return $this->render("statuses/success.php", ["title" => "Ошибка пролонгирования договора!", "text" => "Платеж завершен успешно, однако договор " . $data["Номер"] . " не продлен по причине ошибки: '" . $result["ТекстОшибки"] . "'. Свяжитесь с нами для решения этой проблемы."]);
+                }
+                else
+                {
+                    return $this->render("statuses/success.php", ["title" => "Платеж успешно принят!", "text" => "Ваш платеж успешна завершен. Договор номер " . $data["Номер"] . " продлен."]);
+                }
             }
 
-            return $this->render("statuses/success.php", ["title" => "Платеж успешно принят!", "text" => "Ваш платеж успешна завершен. Договор номер " . $data["Номер"] . " продлен."]);
+            return $this->render("statuses/success.php", ["title" => "Информация о договоре не найдена!", "text" => "Информация о договоре номер " . $data["Номер"] . " не найдена в нашей базе данных. Свяжитесь с нами для решения этой проблемы."]);
         }
         else
         {
@@ -65,6 +75,6 @@ class PaymentController extends Controller
 
     public function error()
     {
-        return $this->render("statuses/error.php", []);
+        return $this->render("statuses/error.php", ["title" => "Платеж не принят!", "text" => "Во время проведения платежа возникла ошибка, транзакция не выполнена. Вернитесь в личный кабинет и попробуйте провести платеж позже"]);
     }
 }

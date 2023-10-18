@@ -3,6 +3,7 @@ namespace App\Account\Model;
 
 use Webwarrd\Core\Model;
 use Webwarrd\Core\Payment;
+use Webwarrd\Core\Error;
 
 class BestPay extends Model implements Payment 
 {
@@ -30,17 +31,19 @@ class BestPay extends Model implements Payment
 
         $client = $this->post($this->config("webapi")[$this->config("mode")] . "Register", $params);
 
-        if(!$client->isErrors())
+        if(!Error::is())
         {
             $ob = simplexml_load_string($client->getResult());
             $json = json_encode($ob);
             $order = json_decode($json, true);
 
+            $this->session->paymentId = $order["id"];
+
             return ["error" => 0, "url" => $this->getPaymentLink($order)];
         }
         else
         {
-            return $client->getErrors();
+            return ["error" => 1, "messages" => $this->errors()];
         }
     }
 
@@ -55,7 +58,7 @@ class BestPay extends Model implements Payment
 
     public function getPaymentInformation($paymentId = null)
     {
-        $paymentId = $paymentId ? $paymentId : $this->request->get("id");
+        $paymentId = $paymentId ? $paymentId : $this->session->paymentId;
 
         if($paymentId)
         {
@@ -67,7 +70,7 @@ class BestPay extends Model implements Payment
     
             $client = $this->post($this->config("webapi")[$this->config("mode")] . "Order", $params);
     
-            if(!$client->isErrors())
+            if(!Error::is())
             {
                 $ob = simplexml_load_string($client->getResult());
                 $json = json_encode($ob);
@@ -78,6 +81,16 @@ class BestPay extends Model implements Payment
         }
 
         return $this->payment;
+    }
+
+    public function getPaymentProduct()
+    { 
+        return $this->payment["reference"];
+    }
+
+    public function getPaymentAmount()
+    { 
+        return ((float)$this->payment["amount"] / 100);
     }
 
     public function isPaymentSuccess()
@@ -100,8 +113,8 @@ class BestPay extends Model implements Payment
         return base64_encode(md5(implode("",$params)));
     }
 
-    public function __get($name)
+    public function errors()
     {
-        return $this->payment[$name];
+        return Error::list();
     }
 }

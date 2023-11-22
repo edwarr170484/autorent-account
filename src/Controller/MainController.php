@@ -10,6 +10,7 @@ class MainController extends Controller
     {
         $gate = new Gate();
         $items = [];
+        $statuses = ["Активен", "Идет просрочка", "Просрочен"];
 
         $list = $gate->getListByUid($this->session->uid["Партнер_УИД"]);
 
@@ -17,28 +18,27 @@ class MainController extends Controller
         {
             foreach($list["Договора"] as $item)
             {
-                $startDateParts = explode(" ", $item["Дата"]);
                 $today = new \DateTime("now");
 
-                $params = [
-                    "date" => $item["Дата"],
-                    "number" => $item["Номер"],
-                    "date_of_calc" => $today->format("d.m.Y") . " " . $startDateParts[1],
-                    "UID" => $item["УИД"]
-                ];
+                $contract = $this->getContractData($item["УИД"]);
 
-                $summ = $gate->getProlongationSumm($params);
+                $class = (in_array($item["СтатусПодробно"], $statuses)) ? "active" : "";
 
                 $items[] = [
-                    "УИД" => $item["УИД"],
-                    "Номер" => $item["Номер"],
-                    "Дата" => $item["Дата"],
-                    "СтатусПодробно" => $item["СтатусПодробно"],
-                    "ДатаВыкупа" => $item["ДатаВыкупа"],
-                    "СуммаПролонгации" => $item["СуммаПролонгации"],
-                    "АктуальнаяСумма" => ($summ && !$summ["ЕстьОшибка"]) ? $summ["СуммаПролонгации"] : "Недоступно"
+                    "УИД" => $contract["УИД"],
+                    "Номер" => $contract["Номер"],
+                    "Дата" => $contract["Дата"],
+                    "СтатусПодробно" => $contract["СтатусПодробно"],
+                    "ДатаПоследнегоПродления" => $contract["ДатаПоследнегоПродления"],
+                    "СуммаПролонгации" => $contract["СуммаПролонгации"],
+                    "СуммаЗакрытия" => $contract["СуммаЗакрытия"],
+                    "Класс" => "all " . $class
                 ];
             }
+
+            usort($items, function ($a, $b){
+                return strtotime($b["Дата"]) - strtotime($a["Дата"]);
+            });
         }
         
         return $this->render("index.php", ["items" => $items, "text" => "Данных пока нет"]);
@@ -51,5 +51,32 @@ class MainController extends Controller
         $data = $gate->getContractHistory($this->request->get("UID"));
         
         return $this->render("history.php", ["data" => $data]);
+    }
+
+    public function summ()
+    {
+        $gate = new Gate();
+        
+        $today = new \DateTime("now");
+
+        $params = [
+            "date" => $this->request->post("contractStart"),
+            "number" => $this->request->post("contractNumber"),
+            "date_of_calc" => $today->format("d.m.Y H:i:s"),
+            "UID" => $this->request->post("contractUid")
+        ];
+
+        $summ = $gate->getProlongationSumm($params);
+
+        return $this->json(["summ" => ($summ && !$summ["ЕстьОшибка"]) ? $summ["СуммаПролонгации"] : "Недоступно"]);
+    }
+
+    private function getContractData($uid)
+    {
+        $gate = new Gate();
+
+        $data = $gate->getContractHistory($uid);
+
+        return $data;
     }
 }

@@ -38,9 +38,8 @@ class PaymentController extends Controller
 
             if($data)
             {
-                $startDateParts = explode(" ", $data["Дата"]);
                 $today = new \DateTime("now");
-                $dateOfCalc = $today->format("d.m.Y") . " " . $startDateParts[1];
+                $dateOfCalc = $today->format("d.m.Y H:i:s");
 
                 $params = [
                     "UID" => $data["УИД"],

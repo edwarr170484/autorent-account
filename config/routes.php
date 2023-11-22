@@ -37,6 +37,12 @@ $routes = [
         "handler" => "history",
         "firewall" => true
     ],
+    "summ" => [
+        "uri" => "/summ",
+        "controller" => "Main",
+        "handler" => "summ",
+        "firewall" => true
+    ],
     "payment_create" => [
         "uri" => "/payment/create",
         "controller" => "Payment",

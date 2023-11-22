@@ -28,35 +28,36 @@
         <div class="col">
           <h2>Договоры</h2>
           <div class="table-responsive small">
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered" >
               <thead>
                 <tr>
                   <th scope="col">№ и дата договора</th>
-                  <th scope="col">Статус</th>
-                  <th scope="col">Дата выкупа</th>
-                  <th scope="col" colspan="2" class="text-center">Пролонгировать</th>
+                  <th scope="col">
+                    <label for="">Статус</label>
+                    <select class="form-select" id="select-status">
+                      <option value="all">Все</option>
+                      <option value="active">Действующие</option>
+                    </select>
+                  </th>
+                  <th scope="col">Дата последнего продления</th>
+                  <th scope="col">Сумма пролонгации (предварительно)</th>
+                  <th scope="col">Сумма выкупа (предварительно)</th>
                   <th>Действия</th>
                 </tr>
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th>Предварительная <br/>сумма</th>
-                  <th>Актуальная <br/>сумма</th>
-                  <th></th>
-                </tr>
               </thead>
-              <tbody>
+              <tbody id="contract-list">
                 <?php if($items && count($items) > 0){ ?>
                   <?php foreach($items as $item){ ?>
-                    <tr>
-                      <td><?php echo $item["Номер"];?>, <br/><?php echo $item["Дата"];?></td>
-                      <td><?php echo $item["СтатусПодробно"];?></td>
-                      <td><?php echo $item["ДатаВыкупа"];?></td>
-                      <td><?php echo $item["СуммаПролонгации"];?> руб.</td>
-                      <td><?php echo $item["АктуальнаяСумма"];?> руб.</td>
+                    <tr class="<?php echo $item["Класс"];?>">
                       <td>
-                        <button class="btn btn-primary mb-1" onclick="contract.showForm('<?php echo $item["УИД"]?>', '<?php echo $item["Номер"];?>',<?php echo $item["АктуальнаяСумма"];?>)">Пролонгировать</button><br/>
+                        <?php echo $item["Номер"];?> от <?php echo $item["Дата"];?>
+                      </td>
+                      <td><?php echo $item["СтатусПодробно"];?></td>
+                      <td><?php echo $item["ДатаПоследнегоПродления"];?></td>
+                      <td><?php echo $item["СуммаПролонгации"];?> руб.</td>
+                      <td><?php echo $item["СуммаЗакрытия"];?> руб.</td>
+                      <td>
+                        <button class="btn btn-primary mb-1" onclick="contract.showForm('<?php echo $item["УИД"]?>', '<?php echo $item["Номер"];?>', '<?php echo $item["Дата"];?>')">Пролонгировать</button><br/>
                         <a class="btn btn-info" href="/history?UID=<?php echo $item["УИД"];?>">История</a>
                       </td>
                     </tr>

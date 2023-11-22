@@ -1,10 +1,26 @@
 let contract = {
-  showForm(uid, num, sum) {
-    $("#contract_uid").val(uid);
-    $("#contract_number").html(num);
-    $("#contract_sum").val(sum);
-    $("#contract_label").html(sum);
-    $("#contractPayment").modal("show");
+  showForm(uid, num, dateStart) {
+    let data = new FormData();
+    data.append("contractStart", dateStart);
+    data.append("contractNumber", num);
+    data.append("contractUid", uid);
+
+    $.ajax({
+      url: "/summ",
+      type: "post",
+      contentType: "application/x-www-form-urlencoded",
+      data: data,
+      processData: false,
+      contentType: false,
+      dataType: "json",
+      success: function (data) {
+        $("#contract_uid").val(uid);
+        $("#contract_number").html(num);
+        $("#contract_sum").val(data.summ);
+        $("#contract_label").html(data.summ);
+        $("#contractPayment").modal("show");
+      },
+    });
   },
 };
 
@@ -66,5 +82,17 @@ $(document).ready(function () {
       });
     }
     return false;
+  });
+
+  $("#select-status").change(function () {
+    let status = $(this).val();
+    $("#contract-list").find("tr").each(function () {
+      if (!$(this).hasClass(status)) {
+        $(this).hide();
+      }
+      else {
+        $(this).show();
+      }
+    });
   });
 });

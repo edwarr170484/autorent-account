@@ -16,13 +16,9 @@ class MainController extends Controller
 
         if($list && count($list["Договора"]) > 0)
         {
-            foreach($list["Договора"] as $item)
+            foreach($list["Договора"] as $contract)
             {
-                $today = new \DateTime("now");
-
-                $contract = $this->getContractData($item["УИД"]);
-
-                $class = (in_array($item["СтатусПодробно"], $statuses)) ? "active" : "";
+                $class = (in_array($contract["СтатусПодробно"], $statuses)) ? "active" : "";
 
                 $items[] = [
                     "УИД" => $contract["УИД"],
@@ -32,7 +28,8 @@ class MainController extends Controller
                     "ДатаПоследнегоПродления" => $contract["ДатаПоследнегоПродления"],
                     "СуммаПролонгации" => $contract["СуммаПролонгации"],
                     "СуммаЗакрытия" => $contract["СуммаЗакрытия"],
-                    "Класс" => "all " . $class
+                    "Класс" => "all " . $class,
+                    "Номенклатура" => $contract["Номенклатура"]
                 ];
             }
 

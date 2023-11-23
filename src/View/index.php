@@ -61,6 +61,16 @@
                         <a class="btn btn-info" href="/history?UID=<?php echo $item["УИД"];?>">История</a>
                       </td>
                     </tr>
+                    <?php if (count($item["Номенклатура"]) > 0){ ?>
+                      <tr>
+                        <td>
+                          <b>Номенклатура: </b>
+                          <?php foreach($item["Номенклатура"] as $stuff){?>
+                            <?php echo $stuff["Наименование"] . ","; ?>
+                          <?php }?>
+                        </td>
+                      </tr>
+                    <?php }?>
                   <?php }?> 
                 <?php }else{?>
                 <tr>

@@ -63,7 +63,7 @@
                     </tr>
                     <?php if (count($item["Номенклатура"]) > 0){ ?>
                       <tr>
-                        <td>
+                        <td colspan="6">
                           <b>Номенклатура: </b>
                           <?php foreach($item["Номенклатура"] as $stuff){?>
                             <?php echo $stuff["Наименование"] . ","; ?>

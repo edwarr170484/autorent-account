@@ -22,6 +22,18 @@ let contract = {
       },
     });
   },
+  filterTable() {
+    let status = $("#select-status").val();
+    $("#contract-list")
+      .find("tr")
+      .each(function () {
+        if (!$(this).hasClass(status)) {
+          $(this).hide();
+        } else {
+          $(this).show();
+        }
+      });
+  },
 };
 
 let notifications = {
@@ -38,6 +50,7 @@ let notifications = {
 };
 
 $(document).ready(function () {
+  contract.filterTable();
   $("#payment_form").on("submit", function (e) {
     e.preventDefault();
 
@@ -85,14 +98,6 @@ $(document).ready(function () {
   });
 
   $("#select-status").change(function () {
-    let status = $(this).val();
-    $("#contract-list").find("tr").each(function () {
-      if (!$(this).hasClass(status)) {
-        $(this).hide();
-      }
-      else {
-        $(this).show();
-      }
-    });
+    contract.filterTable();
   });
 });

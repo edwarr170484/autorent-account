@@ -35,11 +35,12 @@
                   <th scope="col">
                     <label for="">Статус</label>
                     <select class="form-select" id="select-status">
-                      <option value="all">Все</option>
                       <option value="active">Действующие</option>
+                      <option value="all">Все</option>
                     </select>
                   </th>
                   <th scope="col">Дата последнего продления</th>
+                  <th scope="col">Дата выкупа</th>
                   <th scope="col">Сумма пролонгации (предварительно)</th>
                   <th scope="col">Сумма выкупа (предварительно)</th>
                   <th>Действия</th>
@@ -50,10 +51,19 @@
                   <?php foreach($items as $item){ ?>
                     <tr class="<?php echo $item["Класс"];?>">
                       <td>
-                        <?php echo $item["Номер"];?> от <?php echo $item["Дата"];?>
+                        <p><?php echo $item["Номер"];?> от <?php echo $item["ДатаФормат"]->format("d.m.Y");?></p>
+                        <?php if (count($item["Номенклатура"]) > 0){ ?>
+                          <b>Залоги: </b>
+                          <ul class="list-unstyled">
+                            <?php foreach($item["Номенклатура"] as $stuff){?>
+                              <li><?php echo $stuff["Наименование"]; ?></li>
+                            <?php }?>
+                          </ul>  
+                        <?php }?>
                       </td>
                       <td><?php echo $item["СтатусПодробно"];?></td>
                       <td><?php echo $item["ДатаПоследнегоПродления"];?></td>
+                      <td><?php echo $item["ДатаВыкупа"];?></td>
                       <td><?php echo $item["СуммаПролонгации"];?> руб.</td>
                       <td><?php echo $item["СуммаЗакрытия"];?> руб.</td>
                       <td>
@@ -61,16 +71,6 @@
                         <a class="btn btn-info" href="/history?UID=<?php echo $item["УИД"];?>">История</a>
                       </td>
                     </tr>
-                    <?php if (count($item["Номенклатура"]) > 0){ ?>
-                      <tr>
-                        <td colspan="6">
-                          <b>Номенклатура: </b>
-                          <?php foreach($item["Номенклатура"] as $stuff){?>
-                            <?php echo $stuff["Наименование"] . ","; ?>
-                          <?php }?>
-                        </td>
-                      </tr>
-                    <?php }?>
                   <?php }?> 
                 <?php }else{?>
                 <tr>

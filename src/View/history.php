@@ -28,7 +28,25 @@
             <table class="table table-striped table-bordered">
               <tbody>
                 <?php if($data && !$data["ЕстьОшибка"]){ ?>
-                  <tr><td><b>Номер договора</b></td><td><?php echo $data["Номер"];?></td></tr>
+                  <tr>
+                    <td colspan="2"><b>Документ</b></td>
+                    <td><b>Сумма</b></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">Договор <?php echo $data["Номер"];?> от <?php echo $data["Дата"];?></td>
+                    <td><?php echo $data["Сумма"];?></td>
+                  </tr>
+                  <tr>
+                    <td style="width: 50px"></td>
+                    <td>Пролонгация <?php echo $data["Номер"];?> от <?php echo $data["ДатаПоследнегоПродления"];?></td>
+                    <td><?php echo $data["СуммаПролонгации"];?></td>
+                  </tr>
+                  <tr>
+                    <td style="width: 50px"></td>
+                    <td>Закрытие договора <?php echo $data["Номер"];?> от <?php echo $data["ДатаВыкупа"];?></td>
+                    <td><?php echo $data["СуммаЗакрытия"];?></td>
+                  </tr>
+                  <!--<tr><td><b>Номер договора</b></td><td><?php echo $data["Номер"];?></td></tr>
                   <tr><td><b>Дата договора</b></td><td><?php echo $data["Дата"];?></td></tr>
                   <tr><td><b>УИД договора</b></td><td><?php echo $data["УИД"];?></td></tr>
                   <tr><td><b>Вид договора</b></td><td><?php echo $data["ВидДоговора"];?></td></tr>
@@ -46,7 +64,7 @@
                   <tr><td><b>Телефон</b></td><td><?php echo $data["Контрагент_Телефон"];?></td></tr>
                   <tr><td><b>УИД подразделения</b></td><td><?php echo $data["Подразделение_УИД"];?></td></tr>
                   <tr><td><b>Наименование подразделения</b></td><td><?php echo $data["Подразделение_Наименование"];?></td></tr>
-                  <tr><td><b>Код подразделения</b></td><td><?php echo $data["Подразделение_Код"];?></td></tr>
+                  <tr><td><b>Код подразделения</b></td><td><?php echo $data["Подразделение_Код"];?></td></tr>-->
                 <?php }else{?>
                 <tr>
                   <td colspan="2"><?php echo $data["ТекстОшибки"];?></td>

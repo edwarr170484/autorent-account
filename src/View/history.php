@@ -33,7 +33,7 @@
                     <td><b>Сумма</b></td>
                   </tr>
                   <tr>
-                    <td colspan="2">Договор <?php echo $data["Номер"];?> от <?php echo $data["Дата"];?></td>
+                    <td colspan="2">Договор <?php echo $data["Номер"];?> от <?php echo explode(" ", $data["Дата"])[0];?></td>
                     <td><?php echo $data["Сумма"];?></td>
                   </tr>
                   <tr>

@@ -36,35 +36,21 @@
                     <td colspan="2">Договор <?php echo $data["Номер"];?> от <?php echo explode(" ", $data["Дата"])[0];?></td>
                     <td><?php echo $data["Сумма"];?></td>
                   </tr>
-                  <tr>
-                    <td style="width: 50px"></td>
-                    <td>Пролонгация <?php echo $data["Номер"];?> от <?php echo $data["ДатаПоследнегоПродления"];?></td>
-                    <td><?php echo $data["СуммаПролонгации"];?></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 50px"></td>
-                    <td>Закрытие договора <?php echo $data["Номер"];?> от <?php echo $data["ДатаВыкупа"];?></td>
-                    <td><?php echo $data["СуммаЗакрытия"];?></td>
-                  </tr>
-                  <!--<tr><td><b>Номер договора</b></td><td><?php echo $data["Номер"];?></td></tr>
-                  <tr><td><b>Дата договора</b></td><td><?php echo $data["Дата"];?></td></tr>
-                  <tr><td><b>УИД договора</b></td><td><?php echo $data["УИД"];?></td></tr>
-                  <tr><td><b>Вид договора</b></td><td><?php echo $data["ВидДоговора"];?></td></tr>
-                  <tr><td><b>Дата выкупа</b></td><td><?php echo $data["ДатаВыкупа"];?></td></tr>
-                  <tr><td><b>Дата последнего продления</b></td><td><?php echo $data["ДатаПоследнегоПродления"];?></td></tr>
-                  <tr><td><b>Тариф</b></td><td><?php echo $data["Тариф"];?></td></tr>
-                  <tr><td><b>Статус</b></td><td><?php echo $data["Статус"];?></td></tr>
-                  <tr><td><b>Статус подробно</b></td><td><?php echo $data["СтатусПодробно"];?></td></tr>
-                  <tr><td><b>Сумма</b></td><td><?php echo $data["Сумма"];?> руб.</td></tr>
-                  <tr><td><b>Сумма пролонгации</b></td><td><?php echo $data["СуммаПролонгации"];?> руб.</td></tr>
-                  <tr><td><b>Сумма закрытия</b></td><td><?php echo $data["СуммаЗакрытия"];?> руб.</td></tr>
-                  <tr><td><b>УИД контрагента</b></td><td><?php echo $data["Контрагент_УИД"];?></td></tr>
-                  <tr><td><b>Ф.И.О.</b></td><td><?php echo $data["Контрагент_ФИО"];?></td></tr>
-                  <tr><td><b>Дата рождения</b></td><td><?php echo $data["Контрагент_ДатаРождения"];?></td></tr>
-                  <tr><td><b>Телефон</b></td><td><?php echo $data["Контрагент_Телефон"];?></td></tr>
-                  <tr><td><b>УИД подразделения</b></td><td><?php echo $data["Подразделение_УИД"];?></td></tr>
-                  <tr><td><b>Наименование подразделения</b></td><td><?php echo $data["Подразделение_Наименование"];?></td></tr>
-                  <tr><td><b>Код подразделения</b></td><td><?php echo $data["Подразделение_Код"];?></td></tr>-->
+                  <?php if(count($data['ПодчиненныеДокументы']) > 0){?>
+                    <?php foreach($data['ПодчиненныеДокументы'] as $document){?>
+                      <tr>
+                        <td style="width: 50px"></td>
+                        <td><?php echo $document['ВидДокумента'];?> <?php echo $document["Номер"];?> от <?php echo explode(' ', $data["Дата"])[0];?></td>
+                        <td><?php echo $data["Сумма"];?></td>
+                      </tr>
+                    <?php }?>
+                  <?php }else{?>
+                    <tr>
+                        <td style="width: 50px"></td>
+                        <td>История договора пока пуста</td>
+                        <td></td>
+                      </tr>
+                  <?php }?>
                 <?php }else{?>
                 <tr>
                   <td colspan="2"><?php echo $data["ТекстОшибки"];?></td>

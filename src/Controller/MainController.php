@@ -10,7 +10,7 @@ class MainController extends Controller
     {
         $gate = new Gate();
         $items = [];
-        $statuses = ["Активен", "Идет просрочка", "Просрочен"];
+        $statuses = ["Активен", "Идет просрочка", "Просрочен", "Закрыт"];
 
         $list = $gate->getListByUid($this->session->uid["Партнер_УИД"]);
 

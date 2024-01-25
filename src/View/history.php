@@ -40,16 +40,10 @@
                     <?php foreach($data['ПодчиненныеДокументы'] as $document){?>
                       <tr>
                         <td style="width: 50px"></td>
-                        <td><?php echo $document['ВидДокумента'];?> <?php echo $document["Номер"];?> от <?php echo explode(' ', $data["Дата"])[0];?></td>
-                        <td><?php echo $data["Сумма"];?></td>
+                        <td><?php echo $document['ВидДокумента'];?> <?php echo $document["Номер"];?> от <?php echo explode(' ', $document["Дата"])[0];?></td>
+                        <td><?php echo $document["Сумма"];?></td>
                       </tr>
                     <?php }?>
-                  <?php }else{?>
-                    <tr>
-                        <td style="width: 50px"></td>
-                        <td>История договора пока пуста</td>
-                        <td></td>
-                      </tr>
                   <?php }?>
                 <?php }else{?>
                 <tr>

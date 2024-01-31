@@ -15,7 +15,7 @@ class Gate extends Model
 
     public function getListByUid($uid)
     {
-        $result = $this->auth("Site_Exchange", "dS-89eoeX_")->get("https://1c.pobeda-corp.com:4433/uf_static_test/hs/API/PartnerAgreements?UID=" . $uid . "&type_of_contract=Залог&status=Активен");
+        $result = $this->auth("Site_Exchange", "dS-89eoeX_")->get("https://1c.pobeda-corp.com:4433/uf_static_test/hs/API/PartnerAgreements?UID=" . $uid . "&type_of_contract=Залог&status=");
 
         return (Error::is()) ? false : $result->getJsonResult();
     }

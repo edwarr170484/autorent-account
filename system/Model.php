@@ -25,7 +25,8 @@ class Model
         $this->client = new Client();
         
         $this->params = [
-            'verify' => false
+            'verify' => false,
+            'headers' => [],
         ];
 
         $this->result = [];
@@ -80,6 +81,12 @@ class Model
         {
             $this->handleError($e);
         }
+
+        return $this;
+    }
+
+    protected function add_custom_header($name, $value){
+        $this->params["headers"][$name] = $value;
 
         return $this;
     }

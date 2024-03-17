@@ -17,6 +17,7 @@
                 <select class="form-select" id="payment_gate" name="contract[payment]">
                     <option value="BestPay">Best2Pay</option>
                     <option value="Wirebank">Wirebank</option>
+                    <option value="Vepay">Vepay</option>
                 </select>
             </div>
         </div>

@@ -21,5 +21,14 @@ $config = [
             "test" => "https://api.wirebank.ru/v1/",
             "prod" => "https://api.wirebank.ru/v1/"
         ]
+    ],
+    "vepay" => [
+        "login" => "383",
+        "key"   => "gk7s6hfLhE6k5PH", 
+        "mode" => "test", //установите значение prod для работы в боевом режиме
+        "webapi" => [
+            "test" => "https://test.vepay.online/",
+            "prod" => "https://api.vepay.online/"
+        ]
     ]
 ];

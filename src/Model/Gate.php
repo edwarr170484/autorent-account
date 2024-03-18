@@ -36,9 +36,15 @@ class Gate extends Model
 
     public function prolongateContract($params)
     {
-        $result = $this->auth("WEBService", "dS-89eoeX_")->post("https://1c.pobeda-corp.com:5446/uf_product_test_services/hs/Prolongation/AgreementProlongation?UID=" .$params["UID"] ."&date=" . $params["date"] . "&date_of_calc=" . $params["date_of_calc"] . "&number=" . $params["number"] . "&check_number_KKM=" . $params["check_number_KKM"] . "&ogrn_number=" . $params["ogrn_number"] . "&prolongation_sum=" . $params["prolongation_sum"]);
+        try{
+            $result = $this->auth("WEBService", "dS-89eoeX_")->post("https://1c.pobeda-corp.com:5446/uf_product_test_services/hs/Prolongation/AgreementProlongation?UID=" .$params["UID"] ."&date=" . $params["date"] . "&date_of_calc=" . $params["date_of_calc"] . "&number=" . $params["number"] . "&check_number_KKM=" . $params["check_number_KKM"] . "&ogrn_number=" . $params["ogrn_number"] . "&prolongation_sum=" . $params["prolongation_sum"]);
 
-        return (Error::is()) ? ["ЕстьОшибка" => true, "ТекстОшибки" => $this->errors()] : $result->getJsonResult();
+            return (Error::is()) ? ["ЕстьОшибка" => true, "ТекстОшибки" => $this->errors()] : $result->getJsonResult();
+        }
+        catch(\Throwable $e){
+            Error::add($e->getMessage());
+            return ["ЕстьОшибка" => true, "ТекстОшибки" => $this->errors()];
+        }
     }
 
     private function errors()

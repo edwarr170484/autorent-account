@@ -17,17 +17,17 @@ class Vepay extends Model implements Payment
     public function createPayment($productId, $amount)
     {
         $params = [
-            "amount" => 100,
-            "extid" => $productId,
+            "amount" => $amount,
+            "extid"  => sha1($productId . rand(0, 100)),
             "descript" => "Пролонгирование договора номер $productId",
             "timeout" => 11,
             "successurl" => $this->request->getServerName() . "/payment/success",
             "failurl" => $this->request->getServerName() . "/payment/error"
         ];
 
-        $client = $this->add_custom_header("X-Login", $this->config("login"))
+        $client = $this->add_custom_header("X-Mfo", $this->config("login"))
                        ->add_custom_header("X-Token", $this->signature($this->config("key"), json_encode($params)))
-                       ->post_json($this->config("webapi")[$this->config("mode")] . "pay/lk", $params);
+                       ->post_json($this->config("webapi")[$this->config("mode")] . "mfo/pay/lk", $params);
 
         if(!Error::is())
         {
@@ -36,6 +36,8 @@ class Vepay extends Model implements Payment
             if($client->getStatusCode() == 200)
             {   
                 $this->session->paymentId = $order["id"];
+                $this->session->productId = $productId;
+                $this->session->amount = $amount;
                 return ["error" => 0, "url" => $this->getPaymentLink($order)];
             }
             else
@@ -64,9 +66,9 @@ class Vepay extends Model implements Payment
                 "id" => $this->session->paymentId
             ];
 
-            $client = $this->add_custom_header("X-Login", $this->config("login"))
+            $client = $this->add_custom_header("X-Mfo", $this->config("login"))
                        ->add_custom_header("X-Token", $this->signature($this->config("key"), json_encode($params)))
-                       ->post_json($this->config("webapi")[$this->config("mode")] . "pay/info", $params);
+                       ->post_json($this->config("webapi")[$this->config("mode")] . "mfo/pay/state", $params);
 
             if(!Error::is())
             {
@@ -75,6 +77,20 @@ class Vepay extends Model implements Payment
         }
 
         return $this->payment;
+    }
+
+    public function getPaymentProduct()
+    { 
+        $productId = $this->session->productId;
+        $this->session->remove("productId");
+        return $productId;
+    }
+    
+    public function getPaymentAmount()
+    { 
+        $amount = $this->session->amount;
+        $this->session->remove("amount");
+        return $amount;
     }
 
     public function isPaymentSuccess()

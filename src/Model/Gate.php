@@ -42,7 +42,13 @@ class Gate extends Model
             return (Error::is()) ? ["ЕстьОшибка" => true, "ТекстОшибки" => $this->errors()] : $result->getJsonResult();
         }
         catch(\Throwable $e){
+            $result = $this->getJsonResult();
             Error::add($e->getMessage());
+            
+            if($result && isset($result["ТекстОшибки"])){
+                Error::add($result["ТекстОшибки"]);
+            }
+            
             return ["ЕстьОшибка" => true, "ТекстОшибки" => $this->errors()];
         }
     }
